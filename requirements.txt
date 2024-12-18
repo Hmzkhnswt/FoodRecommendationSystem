@@ -1,0 +1,15 @@
+tensorflow==2.15.1
+pandas==2.2.0
+numpy<=2.0.0
+mlflow==2.10.0
+python-box==6.0.2
+ensure==1.0.2
+wandb==0.19.1
+-e .
+
+
+
+
+
+
+

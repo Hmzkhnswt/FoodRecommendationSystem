@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: FoodRecognition
+Version: 0.0.1
+Summary: A Python library for FOOD Recognition Pipeline
+Home-page: https://github.com/HamzaALi/FoodRecognition
+Author: HamzaALi
+Author-email: hamzaali.dcse@gmail.com
+Project-URL: Bug Tracker, https://github.com/HamzaALi/FoodRecognition/issues
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
