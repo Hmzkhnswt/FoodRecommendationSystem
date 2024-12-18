@@ -1,0 +1,15 @@
+data:
+  kaggle_url: "https://www.kaggleusercontent.com/api/v1/datasets/download/sainikhileshreddy/food-recognition-2022"
+  dataset_zip_name: "artifacts/ZippedDataset.zip"
+
+paths:
+  training_data: "artifacts/FoodRecognition/raw_data/public_training_set_release_2.0"
+  validation_data: "artifacts/FoodRecognition/raw_data/public_validation_set_2.0"
+  test_data: "artifacts/FoodRecognition/Output/organized_test_data"
+  output_dir: "artifacts/FoodRecognition/Output"
+  best_model: "artifacts/FoodRecognition/Output/BestModel.h5"
+  training_log: "artifacts/FoodRecognition/Output/TrainingLogs.csv"
+  evaluation_metrics: "artifacts/FoodRecognition/Output/EvaluationMetrics.json"
+  classification_report: "artifacts/FoodRecognition/Output/ClassificationReport.txt"
+  artifacts_dir: "artifacts"
+  extracted_data_dir: "artifacts/FoodRecognition"

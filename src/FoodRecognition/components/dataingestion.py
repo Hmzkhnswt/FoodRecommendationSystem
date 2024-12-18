@@ -1,8 +1,6 @@
 import os
 import subprocess
-import sys
-sys.path.append("/Users/mac/Desktop/FoodRecommendation")
-from src.FoodRecognition.constants.logging import logger
+from FoodRecognition.constants.logging import logger
 from FoodRecognition.constants.utils import unzip_file
 
 class DataIngestion:

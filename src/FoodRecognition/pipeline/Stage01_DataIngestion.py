@@ -1,19 +1,18 @@
 import os
 import sys
 import yaml
-sys.path.append("/Users/mac/Desktop/FoodRecommendation")
-from src.FoodRecognition.components.dataingestion import DataIngestion
-from src.FoodRecognition.constants.logging import logger
-from src.FoodRecognition.constants.utils import read_yaml
+from FoodRecognition.components.dataingestion import DataIngestion
+from FoodRecognition.constants.logging import logger
+from FoodRecognition.constants.utils import read_yaml
 
 def main():
-    params_path = os.path.join("params.yaml")
-    params = read_yaml(params_path)
+    configuration_path = os.path.join("config.yaml")
+    configs = read_yaml(configuration_path)
 
-    kaggle_url = params["data"]["kaggle_url"]
-    artifacts_dir = params["paths"]["artifacts_dir"]
-    dataset_zip_name = os.path.basename(params["data"]["dataset_zip_name"])
-    output_dir = params["paths"]["extracted_data_dir"]
+    kaggle_url = configs["data"]["kaggle_url"]
+    artifacts_dir = configs["paths"]["artifacts_dir"]
+    dataset_zip_name = os.path.basename(configs["data"]["dataset_zip_name"])
+    output_dir = configs["paths"]["extracted_data_dir"]
 
     logger.info(f"Using Kaggle URL: {kaggle_url}")
     logger.info(f"Artifacts directory: {artifacts_dir}")
