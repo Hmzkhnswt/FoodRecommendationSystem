@@ -42,7 +42,9 @@ val_generator = val_datagen.flow_from_directory(
 
 base_model = ResNet50(weights="imagenet", include_top=False, input_shape=(img_height, img_width, 3))
 
-base_model.trainable = False
+base_model.trainable = True
+for layer in base_model.layers[:-30]: 
+    layer.trainable = False
 
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
@@ -51,8 +53,9 @@ output = Dense(num_classes, activation="softmax")(x)
 
 model = Model(inputs=base_model.input, outputs=output)
 
+# Use SGD optimizer
 model.compile(
-    optimizer="adam",
+    optimizer=tf.keras.optimizers.SGD(learning_rate=1e-3, momentum=0.9),
     loss="categorical_crossentropy",
     metrics=["accuracy"]
 )

@@ -26,7 +26,7 @@ wandb:
   evaluation_run_name: "stage04_model_evaluation"
 
 train:
-  epochs: 1
+  epochs: 10
   batch_size: 32
   patience: 5
 
