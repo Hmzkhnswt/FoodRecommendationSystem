@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/mac/Desktop/FoodRecommendation/src/FoodRecognition/pipeline/Stage04_ModelEvaluation.py", line 36, in <module>
-    test_generator = test_datagen.flow_from_directory(
-  File "/Users/mac/Desktop/FoodRecommendation/.venv/lib/python3.10/site-packages/keras/src/preprocessing/image.py", line 1649, in flow_from_directory
-    return DirectoryIterator(
-  File "/Users/mac/Desktop/FoodRecommendation/.venv/lib/python3.10/site-packages/keras/src/preprocessing/image.py", line 563, in __init__
-    for subdir in sorted(os.listdir(directory)):
-FileNotFoundError: [Errno 2] No such file or directory: 'artifacts/FoodRecognition/Output/organized_test_data'
