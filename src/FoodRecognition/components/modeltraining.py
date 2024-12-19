@@ -27,15 +27,13 @@ class ModelTraining:
         self.model_path = config["paths"]["best_model"]
         self.log_path = config["paths"]["training_log"]
 
-        # Ensure the output directory exists
         os.makedirs(self.output_dir, exist_ok=True)
 
-        # MLflow experiment setup
+        mlflow.set_tracking_uri(uri="http://127.0.0.1:5500")
         self.experiment_name = config["mlflow"]["experiment_name"]
         mlflow.set_experiment(self.experiment_name)
         mlflow.tensorflow.autolog()
 
-        # Define callbacks
         self.callbacks = self._set_callbacks()
 
     def _set_callbacks(self):
