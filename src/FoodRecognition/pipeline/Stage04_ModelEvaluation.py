@@ -8,7 +8,6 @@ from keras.preprocessing.image import ImageDataGenerator
 sys.path.append("/Users/mac/Desktop/FoodRecommendation")
 from src.FoodRecognition.components.modelevaluation import ModelEvaluation
 
-
 def load_config(config_path="params.yaml"):
     """
     Load the configuration from params.yaml.
@@ -58,7 +57,6 @@ if __name__ == "__main__":
     with open(report_path, "w") as report_file:
         report_file.write(report)
 
-    # Log to W&B
     evaluator.log_to_wandb(metrics, report)
 
     print("Model evaluation completed successfully.")
