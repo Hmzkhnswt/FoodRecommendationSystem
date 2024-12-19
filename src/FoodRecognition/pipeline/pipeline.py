@@ -5,9 +5,7 @@ import yaml
 from FoodRecognition.constants.utils import read_yaml
 from FoodRecognition.pipeline.Stage01_DataIngestion import main as data_ingestion_main
 from FoodRecognition.pipeline.Stage02_Preprocessing import main as data_preprocessing_main
-from FoodRecognition.pipeline.Stage03_ModelTraining import trainer
 from FoodRecognition.pipeline.Stage04_ModelEvaluation import load_config as load_eval_config
-from FoodRecognition.pipeline.Stage04_ModelEvaluation import evaluator
 
 params_path = os.path.join("params.yaml")
 
@@ -46,12 +44,14 @@ def main():
 
         # Stage 03: Model Training
         logging.info("Starting Stage 03: Model Training...")
+        from FoodRecognition.pipeline.Stage03_ModelTraining import trainer
         trainer.train()
         trainer.evaluate()
         logging.info("Stage 03 completed successfully.\n")
 
         # Stage 04: Model Evaluation
         logging.info("Starting Stage 04: Model Evaluation...")
+        from FoodRecognition.pipeline.Stage04_ModelEvaluation import evaluator
         eval_config = load_eval_config()
         evaluator.load_trained_model()
         metrics = evaluator.evaluate_model()
