@@ -5,6 +5,8 @@ import os
 import mlflow
 import mlflow.tensorflow
 from datetime import datetime
+import warnings
+warnings.filterwarnings("ignore")
 
 
 class ModelTraining:
