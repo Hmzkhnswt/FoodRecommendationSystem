@@ -62,31 +62,43 @@ class ModelTraining:
         """
         Train the model using training and validation generators.
         """
-        epochs = self.config["train"]["epochs"]
-
-        print("Starting model training...")
-        with mlflow.start_run(run_name=f"train_{datetime.now().strftime('%Y%m%d-%H%M%S')}"):
-            history = self.model.fit(
-                self.train_generator,
-                steps_per_epoch=self.train_generator.samples // self.config["train"]["batch_size"],
-                validation_data=self.val_generator,
-                validation_steps=self.val_generator.samples // self.config["train"]["batch_size"],
-                epochs=epochs,
-                callbacks=self.callbacks
-            )
-        print(f"Training complete. Best model saved at {self.model_path}.")
-        return history
+        try:
+            epochs = self.config["train"]["epochs"]
+            print("Starting model training...")
+            with mlflow.start_run(run_name=f"train_{datetime.now().strftime('%Y%m%d-%H%M%S')}"):
+                history = self.model.fit(
+                    self.train_generator,
+                    steps_per_epoch=self.train_generator.samples // self.config["train"]["batch_size"],
+                    validation_data=self.val_generator,
+                    validation_steps=self.val_generator.samples // self.config["train"]["batch_size"],
+                    epochs=epochs,
+                    callbacks=self.callbacks
+                )
+            print(f"Training complete. Best model saved at {self.model_path}.")
+            return history
+        
+        finally:
+            mlflow.end_run()
 
     def evaluate(self):
         """
         Evaluate the model on the validation data generator.
-        """
-        print("Evaluating the model...")
-        with mlflow.start_run(run_name="evaluation"):
-            results = self.model.evaluate(self.val_generator)
-            mlflow.log_metrics({"val_loss": results[0], "val_accuracy": results[1]})
-            print("Validation Results:", results)
-        return results
+            """
+        try:
+            print("Evaluating the model...")
+            with mlflow.start_run(run_name="evaluation"):
+                mlflow.log_params({
+                    "learning_rate": 0.001,
+                    "batch_size": self.config["train"]["batch_size"],
+                    "epochs":  self.config["train"]["epochs"],
+                    "optimizer": "adam"
+                })
+                results = self.model.evaluate(self.val_generator)
+                mlflow.log_metrics({"val_loss": results[0], "val_accuracy": results[1]})
+                print("Validation Results:", results)
+            return results
+        finally:
+            mlflow.end_run()
 
     def save_model(self, save_path):
         """
