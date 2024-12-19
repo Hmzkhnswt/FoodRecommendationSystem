@@ -2,13 +2,10 @@ import os
 import json
 import shutil
 import pandas as pd
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import tensorflow as tf
+from tensorflow import keras
+from keras.preprocessing.image import ImageDataGenerator
 from FoodRecognition.constants.logging import logger
-import warnings
-
-warnings.filterwarnings("ignore")
-
-
 class DataProcessor:
     def __init__(self, train_annotations, val_annotations, train_images, val_images, output_dir):
         """
@@ -38,6 +35,7 @@ class DataProcessor:
             logger.error(f"Error loading annotations: {e}")
             raise
     
+    
     def _process_data(self, images, categories, annotations):
         """
         Process and merge annotations into a DataFrame.
@@ -55,6 +53,7 @@ class DataProcessor:
         except Exception as e:
             logger.error(f"Error processing data: {e}")
             raise
+
 
     def _organize_images(self, data_df, source_dir, target_dir, all_classes=None):
         """
@@ -97,6 +96,7 @@ class DataProcessor:
         except Exception as e:
             logger.error(f"Failed to process training data: {e}")
 
+
     def process_validation_data(self):
         """
         Process validation data and organize into directories.
@@ -107,6 +107,7 @@ class DataProcessor:
             self._organize_images(val_df, self.val_images, self.organized_val_dir, all_classes=self.all_classes)
         except Exception as e:
             logger.error(f"Failed to process validation data: {e}")
+
 
     def get_data_generators(self, target_size=(224, 224), batch_size=32):
         """
@@ -139,6 +140,13 @@ class DataProcessor:
                 batch_size=batch_size,
                 class_mode='categorical'
             )
+
+            class_indices = train_generator.class_indices  
+            with open("artifacts/FoodRecognition/Output/class_indices.json", "w") as f:
+                json.dump(class_indices, f)
+            logger.info("Class indices saved successfully.")
+            print("Class indices saved successfully.")
+
 
             logger.info("Data generators created successfully.")
             return train_generator, val_generator

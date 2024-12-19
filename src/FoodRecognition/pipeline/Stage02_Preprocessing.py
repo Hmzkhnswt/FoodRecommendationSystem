@@ -1,29 +1,22 @@
 import os
-import yaml
 from FoodRecognition.components.dataprocessing import DataProcessor
 from FoodRecognition.constants.logging import logger
-
-# Function to load params.yaml
-def load_params(yaml_path):
-    with open(yaml_path, "r") as file:
-        return yaml.safe_load(file)
+from FoodRecognition.constants.utils import read_yaml
 
 def main():
     """
     Main function to run the data preprocessing pipeline.
     """
     try:
-        params_path = "params.yaml"
-        params = load_params(params_path)
+        config_path = "config/config.yaml"
+        configs = read_yaml(config_path)
 
-        # Define paths from params.yaml
-        train_annotations = os.path.join(params["paths"]["training_data"], "annotations.json")
-        val_annotations = os.path.join(params["paths"]["validation_data"], "annotations.json")
-        train_images = os.path.join(params["paths"]["training_data"], "images")
-        val_images = os.path.join(params["paths"]["validation_data"], "images")
-        output_dir = params["paths"]["output_dir"]
+        train_annotations = os.path.join(configs["paths"]["processing_train_data"], "annotations.json")
+        val_annotations = os.path.join(configs["paths"]["processing_val_data"], "annotations.json")
+        train_images = os.path.join(configs["paths"]["processing_train_data"], "images")
+        val_images = os.path.join(configs["paths"]["processing_val_data"], "images")
+        output_dir = configs["paths"]["output_dir"]
 
-        # Initialize DataProcessor
         processor = DataProcessor(
             train_annotations=train_annotations,
             val_annotations=val_annotations,
@@ -32,12 +25,10 @@ def main():
             output_dir=output_dir
         )
 
-        # Process training and validation data
         processor.process_training_data()
         processor.process_validation_data()
 
-        # Generate data generators
-        batch_size = params["train"]["batch_size"]
+        batch_size = configs["train"]["batch_size"]
         train_generator, val_generator = processor.get_data_generators(batch_size=batch_size)
 
         logger.info("Data preprocessing pipeline completed successfully.")
@@ -47,6 +38,6 @@ def main():
         logger.critical(f"Pipeline failed: {e}")
         print(f"Pipeline failed: {e}")
 
-# Entry point
+
 if __name__ == "__main__":
     main()

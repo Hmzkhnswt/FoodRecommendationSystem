@@ -2,11 +2,9 @@ import os
 import sys
 import logging
 import yaml
-sys.path.append("/Users/mac/Desktop/FoodRecommendation")
-from src.FoodRecognition.constants.utils import read_yaml
+from FoodRecognition.constants.utils import read_yaml
 from FoodRecognition.pipeline.Stage01_DataIngestion import main as data_ingestion_main
 from FoodRecognition.pipeline.Stage02_Preprocessing import main as data_preprocessing_main
-from FoodRecognition.pipeline.Stage03_ModelTraining import CONFIG as model_training_config
 from FoodRecognition.pipeline.Stage04_ModelEvaluation import load_config as load_eval_config
 
 params_path = os.path.join("params.yaml")
@@ -37,7 +35,7 @@ def main():
         # Stage 01: Data Ingestion
         logging.info("Starting Stage 01: Data Ingestion...")
         data_ingestion_main()
-        logging.info("Stage 01 completed successfully.\n")
+        logging.info("Stage 01 completed successfully \n")
 
         # Stage 02: Data Preprocessing
         logging.info("Starting Stage 02: Data Preprocessing...")
@@ -67,7 +65,7 @@ def main():
             yaml.dump(metrics, metrics_file)
         with open(report_path, "w") as report_file:
             report_file.write(report)
-        
+
         logging.info("Stage 04 completed successfully.\n")
         logging.info("Pipeline execution completed successfully!")
 
@@ -77,4 +75,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

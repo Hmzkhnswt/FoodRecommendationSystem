@@ -1,29 +1,21 @@
 import os
-import sys
-import yaml
 import tensorflow as tf
 from tensorflow import keras
 from keras.models import Model
-from keras.layers import (
-    Conv2D, MaxPooling2D, AveragePooling2D, Flatten, Dense, Dropout, Input, concatenate
-)
+from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, Flatten, Dense, Dropout, Input, concatenate
 from keras.preprocessing.image import ImageDataGenerator
-from datetime import datetime
-sys.path.append("/Users/mac/Desktop/FoodRecommendation")
-from src.FoodRecognition.components.modeltraining import ModelTraining
+from FoodRecognition.components.modeltraining import ModelTraining
+from FoodRecognition.constants.utils import read_yaml
 
-def load_params(config_path="params.yaml"):
-    with open(config_path, "r") as file:
-        return yaml.safe_load(file)
-
-CONFIG = load_params()
+config_path = "config/config.yaml"
+configs = read_yaml(config_path)
 
 img_height, img_width = 224, 224
-batch_size = CONFIG["train"]["batch_size"]
+batch_size = configs["train"]["batch_size"]
 num_classes = 498
 
-train_dir = CONFIG["paths"]["training_data"] 
-val_dir = CONFIG["paths"]["validation_data"]
+train_dir = configs["paths"]["training_data"] 
+val_dir = configs["paths"]["validation_data"]
 
 train_datagen = ImageDataGenerator(
     rescale=1.0 / 255.0,
@@ -152,7 +144,8 @@ model.compile(
     metrics=["accuracy"]
 )
 
-trainer = ModelTraining(model, train_generator, val_generator, CONFIG)
+trainer = ModelTraining(model, train_generator, val_generator, configs)
 trainer.train()
 trainer.evaluate()
-trainer.save_model(os.path.join(CONFIG["paths"]["output_dir"], "final_model.h5"))
+trainer.save_model(os.path.join(configs["paths"]["output_dir"], "final_model.h5"))
+
