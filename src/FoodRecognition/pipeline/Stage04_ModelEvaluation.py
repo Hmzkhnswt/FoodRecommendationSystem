@@ -5,8 +5,7 @@ import wandb
 import tensorflow as tf
 from tensorflow import keras
 from keras.preprocessing.image import ImageDataGenerator
-sys.path.append("/Users/mac/Desktop/FoodRecommendation")
-from src.FoodRecognition.components.modelevaluation import ModelEvaluation
+from FoodRecognition.components.modelevaluation import ModelEvaluation
 
 def load_config(config_path="params.yaml"):
     """
