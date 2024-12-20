@@ -1,14 +1,10 @@
 import tensorflow as tf
 from tensorflow import keras
 from keras.callbacks import ModelCheckpoint, EarlyStopping, CSVLogger
-from sklearn.utils.class_weight import compute_class_weight
-import numpy as np
 import os
 import mlflow
 import mlflow.tensorflow
 from datetime import datetime
-import warnings
-warnings.filterwarnings("ignore")
 
 
 class ModelTraining:
@@ -33,27 +29,12 @@ class ModelTraining:
 
         os.makedirs(self.output_dir, exist_ok=True)
 
-        # Compute class weights for handling imbalance
-        self.class_weights = self._compute_class_weights()
-
         mlflow.set_tracking_uri(uri="http://127.0.0.1:5500")
         self.experiment_name = config["mlflow"]["experiment_name"]
         mlflow.set_experiment(self.experiment_name)
         mlflow.tensorflow.autolog()
 
         self.callbacks = self._set_callbacks()
-
-    def _compute_class_weights(self):
-        """
-        Compute class weights to handle class imbalance.
-        """
-        class_labels = self.train_generator.classes
-        class_weights = compute_class_weight(
-            class_weight='balanced',
-            classes=np.unique(class_labels),
-            y=class_labels
-        )
-        return dict(enumerate(class_weights))
 
     def _set_callbacks(self):
         """
@@ -91,8 +72,7 @@ class ModelTraining:
                     validation_data=self.val_generator,
                     validation_steps=self.val_generator.samples // self.config["train"]["batch_size"],
                     epochs=epochs,
-                    callbacks=self.callbacks,
-                    class_weight=self.class_weights  # Use class weights
+                    callbacks=self.callbacks
                 )
             print(f"Training complete. Best model saved at {self.model_path}.")
             return history
@@ -102,32 +82,19 @@ class ModelTraining:
 
     def evaluate(self):
         """
-        Evaluate the model on the validation data generator with additional metrics.
-        """
+        Evaluate the model on the validation data generator.
+            """
         try:
-            from sklearn.metrics import classification_report, f1_score, precision_score, recall_score
-
             print("Evaluating the model...")
             with mlflow.start_run(run_name="evaluation"):
-                y_true = self.val_generator.classes
-                y_pred_probs = self.model.predict(self.val_generator)
-                y_pred = np.argmax(y_pred_probs, axis=1)
-
-                # Compute additional metrics
-                precision = precision_score(y_true, y_pred, average='weighted')
-                recall = recall_score(y_true, y_pred, average='weighted')
-                f1 = f1_score(y_true, y_pred, average='weighted')
-
-                results = self.model.evaluate(self.val_generator)
-                mlflow.log_metrics({
-                    "val_loss": results[0],
-                    "val_accuracy": results[1],
-                    "val_precision": precision,
-                    "val_recall": recall,
-                    "val_f1_score": f1
+                mlflow.log_params({
+                    "learning_rate": 0.001,
+                    "batch_size": self.config["train"]["batch_size"],
+                    "epochs":  self.config["train"]["epochs"],
+                    "optimizer": "adam"
                 })
-
-                print(f"Precision: {precision:.4f}, Recall: {recall:.4f}, F1 Score: {f1:.4f}")
+                results = self.model.evaluate(self.val_generator)
+                mlflow.log_metrics({"val_loss": results[0], "val_accuracy": results[1]})
                 print("Validation Results:", results)
             return results
         finally:
